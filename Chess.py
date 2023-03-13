@@ -4,6 +4,8 @@ import Pieces
 
 class Chess:
 
+    # Define constant size of chess board size
+    BOARD_SIZE = 8
 
     def __init__(self) -> None:
 
@@ -24,13 +26,11 @@ class Chess:
         # Create the window
         window = tk.Tk(screenName="Chess",baseName="Chess")
 
-        # board size is 8 x 8
-        boardSize = 8
 
         # Create grids
-        for i in range(boardSize):
+        for i in range(Chess.BOARD_SIZE):
 
-            for j in range(boardSize):
+            for j in range(Chess.BOARD_SIZE):
 
                 # draws alternating colors
                 color = "black"
