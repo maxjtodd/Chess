@@ -114,7 +114,7 @@ class ChessVisual:
             backgroundColor = "burlywood3"
         
         # Create the canvas to place the image
-        canvas = tk.Canvas(master=self.window, width=75, height=75, bg=backgroundColor)
+        canvas = tk.Canvas(master=self.window, width=75, height=75, bg=backgroundColor, highlightthickness=0)
         
         canvas.grid(row=y, column=x)
 
