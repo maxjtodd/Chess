@@ -18,8 +18,6 @@ class ChessVisual:
         # Set all of the pieces on the board
         self.setAllPieces()
 
-        # self.setPiece(1, 1, 1)
-        # self.movePiece(1,1,2,3)
 
         self.window.bind("<Button-1>", self.click)
 
@@ -39,9 +37,9 @@ class ChessVisual:
             for j in range(Chess.BOARD_SIZE):
 
                 # draws alternating colors
-                color = "black"
+                color = "burlywood3"
                 if (i + j) % 2 == 0:
-                    color = "white"
+                    color = "LemonChiffon2"
                 
                 # Add the grid square to the window
                 newFrame = tk.Frame(master=window, width=100, height=100, bg=color)
