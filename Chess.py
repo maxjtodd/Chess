@@ -1,12 +1,20 @@
 from Pieces import *
 
 class Chess:
+    """
+    Controls the environment for chess
+    """
 
     BOARD_SIZE = 8
 
     def __init__(self) -> None:
-        
+        """
+        Creates the initial state of the chess game
+        - board: 2d array with 0's as empty space and piece values according to PieceType enum
+        - whiteTurn: True if the turn is white, false if the turn is black
+        """
         self.board = Chess.initializeGame()
+        self.whiteTurn = True
 
 
     def initializeGame():

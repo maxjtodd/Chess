@@ -7,13 +7,19 @@ class ChessVisual:
 
     # Define constant size of chess board size
 
-    def __init__(self) -> None:
+    def __init__(self, game : Chess) -> None:
 
         # Create and draw tiles for window for the board
         self.window = ChessVisual.drawBoard()
 
-        self.setPiece(1, 1, 1)
-        self.movePiece(1,1,2,3)
+        # Set the game state to the controlling game state, of type Chess
+        self.game = game
+
+        # Set all of the pieces on the board
+        self.setAllPieces()
+
+        # self.setPiece(1, 1, 1)
+        # self.movePiece(1,1,2,3)
 
         self.window.bind("<Button-1>", self.click)
 
@@ -44,7 +50,18 @@ class ChessVisual:
         return window
     
 
+    def setAllPieces(self):
+        """
+        Sets all of the pieces according to the game state, self.game
+        """
+        # Loop through the board
+        for y, row in enumerate(self.game.board):
+            for x, tile in enumerate(row):
 
+                # Only set the piece if it is not empty
+                if tile != 0:
+                    # Set the given tile to the correct piece
+                    self.setPiece(tile, x, y)
 
 
     def setPiece(self, piece : int, newX : int, newY : int):
@@ -93,7 +110,9 @@ class ChessVisual:
 
 def main():
 
-    c = ChessVisual()
+    g = Chess()
+
+    c = ChessVisual(g)
 
     c.window.mainloop()
 
