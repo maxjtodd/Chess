@@ -15,8 +15,12 @@ class ChessVisual:
         # Set the game state to the controlling game state, of type Chess
         self.game = game
 
+        # Stores images to prevent from being garbage collected
+        self.images = set()
+
         # Set all of the pieces on the board
         self.setAllPieces()
+        
 
 
         self.window.bind("<Button-1>", self.click)
@@ -100,12 +104,25 @@ class ChessVisual:
         # Create the image
         pieceImageTk = ImageTk.PhotoImage(file=imagePath)
 
-        # Set the piece to the new image
-        label = tk.Label(self.window, image=pieceImageTk)
-        # label = tk.Label(master=self.window,text=piece)
-        label.grid(row=y, column=x)
-        label.image = pieceImageTk
 
+        # Determine background color for piece
+        total = x + y
+        backgroundColor = "yellow"
+        if total % 2 == 0:
+            backgroundColor = "LemonChiffon2"
+        else:
+            backgroundColor = "burlywood3"
+        
+        # Create the canvas to place the image
+        canvas = tk.Canvas(master=self.window, width=75, height=75, bg=backgroundColor)
+        
+        canvas.grid(row=y, column=x)
+
+        # Prevent photo from being garbage collected
+        self.images.add(pieceImageTk)
+
+        # Add image to the canvas
+        canvas.create_image((0,0), image=pieceImageTk, anchor='nw')
     
     def movePiece(self, oldX : int, oldY : int, newX : int, newY : int):
         """
