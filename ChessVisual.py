@@ -1,5 +1,5 @@
 import tkinter as tk
-from enum import Enum
+from PIL import Image, ImageTk
 import Pieces
 from Chess import *
 
@@ -64,12 +64,49 @@ class ChessVisual:
                     self.setPiece(tile, x, y)
 
 
-    def setPiece(self, piece : int, newX : int, newY : int):
+    def setPiece(self, piece : int, x : int, y : int):
         """
         Set a given piece using Piece enum to the new x and y position on the grid.
         """
-        label = tk.Label(self.window, text=piece)
-        label.grid(row=newY, column=newX)
+
+        # Determine the piece to set given the piece value
+        imagePath = "./PieceImages/"
+
+        if piece == 1:
+            imagePath += "WhitePawn"
+        elif piece == 2:
+            imagePath += "WhiteKnight"
+        elif piece == 3:
+            imagePath += "WhiteBishop"
+        elif piece == 4:
+            imagePath += "WhiteRook"
+        elif piece == 5:
+            imagePath += "WhiteQueen"
+        elif piece == 6:
+            imagePath += "WhiteKing"
+        elif piece == -1:
+            imagePath += "BlackPawn"
+        elif piece == -2:
+            imagePath += "BlackKnight"
+        elif piece == -3:
+            imagePath += "BlackBishop"
+        elif piece == -4:
+            imagePath += "BlackRook"
+        elif piece == -5:
+            imagePath += "BlackQueen"
+        elif piece == -6:
+            imagePath += "BlackKing"
+        
+        imagePath += ".png"
+
+        # Create the image
+        pieceImageTk = ImageTk.PhotoImage(file=imagePath)
+
+        # Set the piece to the new image
+        label = tk.Label(self.window, image=pieceImageTk)
+        # label = tk.Label(master=self.window,text=piece)
+        label.grid(row=y, column=x)
+        label.image = pieceImageTk
 
     
     def movePiece(self, oldX : int, oldY : int, newX : int, newY : int):

@@ -40,6 +40,3 @@ class Chess:
         for row in self.board:
             print(row)
 
-
-c = Chess()
-c.printBoard()
