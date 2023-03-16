@@ -94,10 +94,21 @@ class Chess:
             if piece ==  PieceType.WHITEPAWN.value:
 
                 # TODO promotions
-                # TODO capture
 
                 # Pawns can move forward once at any time
                 positions.append((x, y - 1, False))
+
+                # Determine regular capture movements
+                potentialPositions = [(x - 1, y - 1), (x + 1, y - 1)]
+
+                for position in potentialPositions:
+                    # Determine if capture is in bounds
+                    if position[0] >= 0 and position[1] >= 0 and position[0] < Chess.BOARD_SIZE and position[1] < Chess.BOARD_SIZE:
+
+                        # Determine if piece in capture square is black
+                        if self.board[position[1]][position[0]] < 0:
+                            positions.append((position[0], position[1], True))
+
 
                 # Pawns can move forward twice if hasnt moved
                 if y == 6:
@@ -589,6 +600,17 @@ class Chess:
 
                 # Pawns can move forward once at any time
                 positions.append((x, y + 1, False))
+
+                # Determine regular capture movements
+                potentialPositions = [(x - 1, y + 1), (x + 1, y + 1)]
+
+                for position in potentialPositions:
+                    # Determine if capture is in bounds
+                    if position[0] >= 0 and position[1] >= 0 and position[0] < Chess.BOARD_SIZE and position[1] < Chess.BOARD_SIZE:
+
+                        # Determine if piece in capture square is white
+                        if self.board[position[1]][position[0]] > 0:
+                            positions.append((position[0], position[1], True))
 
                 # Pawns can move forward twice if hasnt moved
                 if y == 1:
