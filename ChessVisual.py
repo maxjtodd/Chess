@@ -21,7 +21,7 @@ class ChessVisual:
         # Stores potential moves for clicked piece to highlight
         self.selectedPotentialMoves = []
 
-        # Stores
+        # Stores whether the selected piece is moving
         self.moving = False
 
         # Set all of the pieces on the board
@@ -174,6 +174,9 @@ class ChessVisual:
                     self.moving = False
                     print("MOVING PIECE")
 
+                    # TODO Remove highlighting
+
+
         # No piece was moved, select new piece
         if not justMoved:
 
@@ -185,6 +188,8 @@ class ChessVisual:
                 # Update the potential moves based on selected piece
                 self.selectedPotentialMoves = self.game.canMoveTo(z[0], z[1])
                 print("SELECTING")
+
+                # TODO Add highlighting
 
 
 
