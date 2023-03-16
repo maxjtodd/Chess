@@ -40,11 +40,9 @@ class Piece:
         Creates a piece.
         - piece: PieceType enum for the given piece
         - location: Location of the piece, stored in chess syntax. i.e. A1, E4, ...
-        - white: True if white piece, False if black piece
         """
         self.piece = pieceType
         self.location = location
-        self.white = white
 
     
     def chessLocationToCoordinates(self):

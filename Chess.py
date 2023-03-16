@@ -17,7 +17,7 @@ class Chess:
         self.whiteTurn = True
 
 
-    def initializeGame():
+    def initializeGame() -> list:
         """
         Create the iniital state of chess
         - 0 stores empty space
@@ -36,6 +36,91 @@ class Chess:
         
         return board
     
+
+    def movePiece(self, oldX : int, oldY : int, newX : int, newY : int) -> None:
+        """
+        Moves piece from one position to another. Should only be called when the piece
+        is available to be moved to the new position.
+        """
+        piece = self.board[oldY][oldX]
+        self.board[oldY][oldX] = 0
+        self.board[newY][newX] = piece
+
+    
+    def canMoveTo(self, x : int, y : int) -> list:
+        """
+        Returns a list of tiles where the piece of the inputted quardinates can move.
+        """
+
+        # Get the piece
+        piece = self.board[y][x]
+
+        if piece != 0:
+            print("Piece is: ", PieceType(piece))
+            self.printBoard()
+
+
+
+        # Set up the movement availability
+        # Formatted as touple. (x to move to, y to move to, boolean true if piece capture)
+        positions = []
+
+        #
+        # TODO capture
+        # 
+        #
+
+        # Get the available positions to move
+        if piece == 0:
+            return None
+        
+        # White pawn movement positions
+        elif piece ==  PieceType.WHITEPAWN.value:
+            # TODO promotions
+            # TODO capture
+            positions.append((x, y - 1, False))
+        
+
+        # Black pawn movement positions
+        elif piece ==  PieceType.BLACKPAWN.value:
+            # TODO promotions
+            # TODO capture
+            positions.append((x, y + 1, False))
+            return positions
+
+
+        # White Knight movement positions
+        elif piece ==  PieceType.WHITEKNIGHT.value:
+
+            # Define positions for knight to move (to add to existing x and y values)
+            potentialPositions = [(-1, -2), (1, -2), (-2, -1), (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1)]
+
+            # Determine where the knight can move
+            for move in potentialPositions:
+                # Move must be in bounds of the board
+                if x + move[0] >= 0 and y + move[1] >= 0 and x + move[0] < Chess.BOARD_SIZE and y + move[1] < Chess.BOARD_SIZE:
+                    
+                    # Move cannot land on a white piece
+                    landingSquare = self.board[y + move[1]][x + move[0]]
+
+                    if landingSquare <= 0:
+
+                        # Knight capturing piece
+                        if landingSquare < 0:
+                            positions.append((x + move[0], y + move[1], True))
+                        # Knight not capturing piece
+                        else:
+                            positions.append((x + move[0], y + move[1], False))
+                            
+
+        print(positions)
+        return positions
+
+        
+        
+
+
+
     def printBoard(self):
         for row in self.board:
             print(row)

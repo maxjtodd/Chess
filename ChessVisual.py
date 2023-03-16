@@ -123,7 +123,8 @@ class ChessVisual:
 
         # Add image to the canvas
         canvas.create_image((0,0), image=pieceImageTk, anchor='nw')
-    
+
+
     def movePiece(self, oldX : int, oldY : int, newX : int, newY : int):
         """
         Move the piece from one position to another
@@ -153,9 +154,14 @@ class ChessVisual:
         # retrieve the relative position on the
         # parent widget
         z = self.window.grid_location(x, y)
-    
+
+
         # printing position
         print(z)
+    
+        jk = self.game.canMoveTo(z[0], z[1])
+
+        
 
 
 
