@@ -16,7 +16,7 @@ class Chess:
         self.board = Chess.initializeGame()
 
         # TODO: remove line under
-        self.board[4][4] = -5
+        self.board[2][4] = 6
         # self.board[6][4] = -1
 
         self.whiteTurn = True
@@ -1024,6 +1024,60 @@ class Chess:
                 # Square is black square, no new move and stop going
                 else:
                     break
+
+
+        # White King movement positions
+        elif piece == PieceType.WHITEKING.value:
+
+            # Define all possible king movement positions, relative to current position
+            potentialPositions = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
+
+            # Determine valid potential positions. 
+            for position in potentialPositions:
+
+                # Determine if move is in bounds
+                newX, newY = (x + position[0]), (y + position[1])
+
+                if newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                    # Move and append no capture if 0 (empty), Move and append with capture if negative (black piece), don't do anything if white piece
+                    landingSquare = self.board[newY][newX]
+
+                    # Empty square, move and append (no capture)
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+                    
+                    # Black piece, move and append (capture)
+                    elif landingSquare < 0:
+                        positions.append((newX, newY, True))
+
+
+        # Black King movement positions
+        elif piece == PieceType.BLACKKING.value:
+
+            # Define all possible king movement positions, relative to current position
+            potentialPositions = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
+
+            # Determine valid potential positions. 
+            for position in potentialPositions:
+
+                # Determine if move is in bounds
+                newX, newY = (x + position[0]), (y + position[1])
+
+                if newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                    # Move and append no capture if 0 (empty), Move and append with capture if positive (white piece), don't do anything if black piece
+                    landingSquare = self.board[newY][newX]
+
+                    # Empty square, move and append (no capture)
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+                    
+                    # White piece, move and append (capture)
+                    elif landingSquare > 0:
+                        positions.append((newX, newY, True))
+
+
 
 
         print(positions)
