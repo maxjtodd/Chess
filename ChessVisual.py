@@ -162,36 +162,30 @@ class ChessVisual:
         print(z)
         justMoved = False
 
-        # Selecting piece
-        if not self.moving:
+        # Determine if clicked piece is in the potential moves for selected piece
+        if self.moving:
 
-            # Determine if selecting piece (not empty square)
-            if self.game.board[z[1]][z[0]] != 0:
-
-                print("SELECTING PIECE")
-                self.selectedPotentialMoves = self.game.canMoveTo(z[0], z[1])
-                self.moving = True
-
-
-        # Moving piece
-        else:
-
-            # Determine if selected square is available to be moved to
             for move in self.selectedPotentialMoves:
 
-                movingX = move[0]
-                movingY = move[1]
-                
-                # Can move to the selected square 
+                # Moving the selected piece
                 if z[0] == move[0] and z[1] == move[1]:
 
-                    print("MOVING PIECE")
                     justMoved = True
+                    self.moving = False
+                    print("MOVING PIECE")
 
-            # Piece just moved
-            if not justMoved:
-                
-                self.moving = False
+        # No piece was moved, select new piece
+        if not justMoved:
+
+            # Don't select an empty tile
+            if self.game.board[z[1]][z[0]] != 0:
+
+                self.moving = True
+
+                # Update the potential moves based on selected piece
+                self.selectedPotentialMoves = self.game.canMoveTo(z[0], z[1])
+                print("SELECTING")
+
 
 
 
