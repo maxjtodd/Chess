@@ -59,15 +59,4 @@ class Piece:
         return str(chr(x + 65)) + str(y)
     
 
-    def canMoveTo(self):
-        """
-        Where a piece can move to. Implement in each subclass.
-        """
-        raise NotImplemented
     
-
-    def move(self, newX : int, newY : int):
-        """
-        Move the piece to new location
-        """
-        self.location = Piece.coordinatesToChessLocation(newX, newY)
