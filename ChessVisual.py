@@ -24,6 +24,9 @@ class ChessVisual:
         # Stores whether the selected piece is moving
         self.moving = False
 
+        # Stores the highlighted cells
+        self.highlights = []
+
         # Set all of the pieces on the board
         self.setAllPieces()
         
@@ -148,7 +151,34 @@ class ChessVisual:
         label.grid(row=newY, column=newX)
 
     
+    def highlightPotentialMoves(self):
+        """
+        Highlights squares a selected piece is able to move to. Called by self.click
+        """
+
+        # Create highlight objects for every potential move position
+        for toHighlight in self.selectedPotentialMoves:
+
+            # Create a canvas object
+            canvas = tk.Canvas(master=self.window, width=100, height=100, bd=0, highlightthickness=0)
+            canvas.create_rectangle(0,0,100,100,fill="green")
+
+            # Add canvas object to list of highlights
+            self.highlights.append(canvas)
+
+            # Add canvas to grid
+            canvas.grid(row=toHighlight[1], column=toHighlight[0])
+
     
+    def removeHighlights(self):
+        """
+        Removes the highlighted squares on the board. Called by self.click
+        """
+        for highlight in self.highlights:
+
+            highlight.grid_remove()
+
+
     def click(self, event):
         
         # Here retrieving the size of the parent
@@ -172,9 +202,9 @@ class ChessVisual:
 
                     justMoved = True
                     self.moving = False
-                    print("MOVING PIECE")
-
-                    # TODO Remove highlighting
+        
+                    # Piece moved, remove the highlights
+                    self.removeHighlights()
 
 
         # No piece was moved, select new piece
@@ -183,13 +213,18 @@ class ChessVisual:
             # Don't select an empty tile
             if self.game.board[z[1]][z[0]] != 0:
 
+                # Remove any uneccesary highlights
+                self.removeHighlights()
+
+                # Piece selected, set stage to moving
                 self.moving = True
 
                 # Update the potential moves based on selected piece
                 self.selectedPotentialMoves = self.game.canMoveTo(z[0], z[1])
                 print("SELECTING")
 
-                # TODO Add highlighting
+                # Highlight the selected piece's potential moves
+                self.highlightPotentialMoves()
 
 
 
