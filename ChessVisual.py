@@ -18,6 +18,12 @@ class ChessVisual:
         # Stores images to prevent from being garbage collected
         self.images = set()
 
+        # Stores potential moves for clicked piece to highlight
+        self.selectedPotentialMoves = []
+
+        # Stores
+        self.moving = False
+
         # Set all of the pieces on the board
         self.setAllPieces()
         
@@ -150,16 +156,45 @@ class ChessVisual:
         x = event.x_root - self.window.winfo_rootx()
         y = event.y_root - self.window.winfo_rooty()
     
-        # Here grid_location() method is used to
-        # retrieve the relative position on the
-        # parent widget
+        # Get relative position of grid
         z = self.window.grid_location(x, y)
 
-
-        # printing position
         print(z)
-    
-        jk = self.game.canMoveTo(z[0], z[1])
+        justMoved = False
+
+        # Selecting piece
+        if not self.moving:
+
+            # Determine if selecting piece (not empty square)
+            if self.game.board[z[1]][z[0]] != 0:
+
+                print("SELECTING PIECE")
+                self.selectedPotentialMoves = self.game.canMoveTo(z[0], z[1])
+                self.moving = True
+
+
+        # Moving piece
+        else:
+
+            # Determine if selected square is available to be moved to
+            for move in self.selectedPotentialMoves:
+
+                movingX = move[0]
+                movingY = move[1]
+                
+                # Can move to the selected square 
+                if z[0] == move[0] and z[1] == move[1]:
+
+                    print("MOVING PIECE")
+                    justMoved = True
+
+            # Piece just moved
+            if not justMoved:
+                
+                self.moving = False
+
+
+
 
         
 

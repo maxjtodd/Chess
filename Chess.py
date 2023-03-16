@@ -16,7 +16,7 @@ class Chess:
         self.board = Chess.initializeGame()
 
         # TODO: remove line under
-        self.board[2][4] = 6
+        # self.board[2][4] = 6
         # self.board[6][4] = -1
 
         self.whiteTurn = True
