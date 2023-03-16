@@ -53,6 +53,9 @@ class Chess:
         self.board[oldY][oldX] = 0
         self.board[newY][newX] = piece
 
+        # Set other player turn
+        self.whiteTurn = not self.whiteTurn
+
     
     def canMoveTo(self, x : int, y : int) -> list:
         """
@@ -79,988 +82,991 @@ class Chess:
         # TODO Check : seperate function, checks squares around the king to determine if attacked
         # 
 
+
         # Get the available positions to move
         if piece == 0:
             return None
         
-        # White pawn movement positions
-        elif piece ==  PieceType.WHITEPAWN.value:
-
-            # TODO promotions
-            # TODO capture
-
-            # Pawns can move forward once at any time
-            positions.append((x, y - 1, False))
-
-            # Pawns can move forward twice if hasnt moved
-            if y == 6:
-                positions.append((x, y - 2, False))
-        
-
-        # Black pawn movement positions
-        elif piece ==  PieceType.BLACKPAWN.value:
-
-            # TODO promotions
-            # TODO capture
-
-            # Pawns can move forward once at any time
-            positions.append((x, y + 1, False))
-
-            # Pawns can move forward twice if hasnt moved
-            if y == 1:
-                positions.append((x, y + 2, False))
-
-
-        # White Knight movement positions
-        elif piece ==  PieceType.WHITEKNIGHT.value:
-
-            # Define positions for knight to move (to add to existing x and y values)
-            potentialPositions = [(-1, -2), (1, -2), (-2, -1), (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1)]
-
-            # Determine where the knight can move
-            for move in potentialPositions:
-                # Move must be in bounds of the board
-                if x + move[0] >= 0 and y + move[1] >= 0 and x + move[0] < Chess.BOARD_SIZE and y + move[1] < Chess.BOARD_SIZE:
-                    
-                    # Move cannot land on a white piece
-                    landingSquare = self.board[y + move[1]][x + move[0]]
-
-                    if landingSquare <= 0:
-
-                        # Knight capturing piece
-                        if landingSquare < 0:
-                            positions.append((x + move[0], y + move[1], True))
-                        # Knight not capturing piece
-                        else:
-                            positions.append((x + move[0], y + move[1], False))
-
-
-        # Black Knight movement positions
-        elif piece ==  PieceType.BLACKKNIGHT.value:
-
-            # Define positions for knight to move (to add to existing x and y values)
-            potentialPositions = [(-1, -2), (1, -2), (-2, -1), (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1)]
-
-            # Determine where the knight can move
-            for move in potentialPositions:
-                # Move must be in bounds of the board
-                if x + move[0] >= 0 and y + move[1] >= 0 and x + move[0] < Chess.BOARD_SIZE and y + move[1] < Chess.BOARD_SIZE:
-                    
-                    # Move cannot land on a black piece
-                    landingSquare = self.board[y + move[1]][x + move[0]]
-
-                    if landingSquare >= 0:
-
-                        # Knight capturing piece
-                        if landingSquare > 0:
-                            positions.append((x + move[0], y + move[1], True))
-                        # Knight not capturing piece
-                        else:
-                            positions.append((x + move[0], y + move[1], False))
-                            
-
-        # White Bishop movement positions
-        elif piece == PieceType.WHITEBISHOP.value:
-
-            # Determine the up right movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x + i
-                newY = y - i
-                
-                # Determine if the up right movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is black square, append and stop going, capture
-                elif landingSquare < 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is white square, no new move and stop going
-                else:
-                    break
-
-            # Determine the up left movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x - i
-                newY = y - i
-                
-                # Determine if the up left movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is black square, append and stop going, capture
-                elif landingSquare < 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is white square, no new move and stop going
-                else:
-                    break
-
-            # Determine the down left movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x - i
-                newY = y + i
-                
-                # Determine if the down left movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is black square, append and stop going, capture
-                elif landingSquare < 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is white square, no new move and stop going
-                else:
-                    break
-
-            # Determine the down right movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x + i
-                newY = y + i
-                
-                # Determine if the down right movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is black square, append and stop going, capture
-                elif landingSquare < 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is white square, no new move and stop going
-                else:
-                    break
+        # White turn, only white can move
+        elif self.whiteTurn:
             
-            
-         # Black Bishop movement positions
-        
-        
-        # Black Bishop movement positions
-        elif piece == PieceType.BLACKBISHOP.value:
+            # White pawn movement positions
+            if piece ==  PieceType.WHITEPAWN.value:
 
-            # Determine the up right movement positions
-            for i in range(1, 8):
+                # TODO promotions
+                # TODO capture
 
-                # Set up the new x and new y variables
-                newX = x + i
-                newY = y - i
-                
-                # Determine if the up right movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
+                # Pawns can move forward once at any time
+                positions.append((x, y - 1, False))
 
-                # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is white square, append and stop going, capture
-                elif landingSquare > 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is black square, no new move and stop going
-                else:
-                    break
-
-            # Determine the up left movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x - i
-                newY = y - i
-                
-                # Determine if the up left movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is white square, append and stop going, capture
-                elif landingSquare > 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is black square, no new move and stop going
-                else:
-                    break
-
-            # Determine the down left movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x - i
-                newY = y + i
-                
-                # Determine if the down left movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is white square, append and stop going, capture
-                elif landingSquare > 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is black square, no new move and stop going
-                else:
-                    break
-
-            # Determine the down right movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x + i
-                newY = y + i
-                
-                # Determine if the down right movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is white square, append and stop going, capture
-                elif landingSquare > 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is black square, no new move and stop going
-                else:
-                    break
+                # Pawns can move forward twice if hasnt moved
+                if y == 6:
+                    positions.append((x, y - 2, False))
 
 
-        # White Rook movement positions
-        elif piece == PieceType.WHITEROOK.value:
+            # White Knight movement positions
+            elif piece ==  PieceType.WHITEKNIGHT.value:
 
-            # Determine left move positions
-            for i in range(1, 8):
+                # Define positions for knight to move (to add to existing x and y values)
+                potentialPositions = [(-1, -2), (1, -2), (-2, -1), (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1)]
 
-                # Determine if the movement is in bounds
-                newX = x - i
+                # Determine where the knight can move
+                for move in potentialPositions:
+                    # Move must be in bounds of the board
+                    if x + move[0] >= 0 and y + move[1] >= 0 and x + move[0] < Chess.BOARD_SIZE and y + move[1] < Chess.BOARD_SIZE:
+                        
+                        # Move cannot land on a white piece
+                        landingSquare = self.board[y + move[1]][x + move[0]]
 
-                if newX >= 0 and newX < Chess.BOARD_SIZE:
+                        if landingSquare <= 0:
 
-                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
-                    landingSquare = self.board[y][newX]
+                            # Knight capturing piece
+                            if landingSquare < 0:
+                                positions.append((x + move[0], y + move[1], True))
+                            # Knight not capturing piece
+                            else:
+                                positions.append((x + move[0], y + move[1], False))
+
+
+            # White Bishop movement positions
+            elif piece == PieceType.WHITEBISHOP.value:
+
+                # Determine the up right movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x + i
+                    newY = y - i
                     
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((newX, y, False))
-
-                    # Square has a black piece, append and stop, capture
-                    elif landingSquare < 0:
-                        positions.append((newX, y, True))
+                    # Determine if the up right movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
                         break
 
-                    # Square has a white piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine right move positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newX = x + i
-
-                if newX >= 0 and newX < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
-                    landingSquare = self.board[y][newX]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((newX, y, False))
-
-                    # Square has a black piece, append and stop, capture
-                    elif landingSquare < 0:
-                        positions.append((newX, y, True))
-                        break
-
-                    # Square has a white piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine up positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newY = y - i
-
-                if newY >= 0 and newY < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
-                    landingSquare = self.board[newY][x]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((x, newY, False))
-
-                    # Square has a black piece, append and stop, capture
-                    elif landingSquare < 0:
-                        positions.append((x, newY, True))
-                        break
-
-                    # Square has a white piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine down positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newY = y + i
-
-                if newY >= 0 and newY < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
-                    landingSquare = self.board[newY][x]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((x, newY, False))
-
-                    # Square has a black piece, append and stop, capture
-                    elif landingSquare < 0:
-                        positions.append((x, newY, True))
-                        break
-
-                    # Square has a white piece, no new move and stop going
-                    else:
-                        break
-
-
-        # Black Rook movement positions
-        elif piece == PieceType.BLACKROOK.value:
-
-            # Determine left move positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newX = x - i
-
-                if newX >= 0 and newX < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
-                    landingSquare = self.board[y][newX]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((newX, y, False))
-
-                    # Square has a white piece, append and stop, capture
-                    elif landingSquare > 0:
-                        positions.append((newX, y, True))
-                        break
-
-                    # Square has a white piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine right move positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newX = x + i
-
-                if newX >= 0 and newX < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
-                    landingSquare = self.board[y][newX]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((newX, y, False))
-
-                    # Square has a white piece, append and stop, capture
-                    elif landingSquare > 0:
-                        positions.append((newX, y, True))
-                        break
-
-                    # Square has a black piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine up positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newY = y - i
-
-                if newY >= 0 and newY < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
-                    landingSquare = self.board[newY][x]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((x, newY, False))
-
-                    # Square has a white piece, append and stop, capture
-                    elif landingSquare > 0:
-                        positions.append((x, newY, True))
-                        break
-
-                    # Square has a black piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine down positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newY = y + i
-
-                if newY >= 0 and newY < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
-                    landingSquare = self.board[newY][x]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((x, newY, False))
-
-                    # Square has a white piece, append and stop, capture
-                    elif landingSquare > 0:
-                        positions.append((x, newY, True))
-                        break
-
-                    # Square has a black piece, no new move and stop going
-                    else:
-                        break
-
-        
-        # Whtie Queen movement positions
-        elif piece == PieceType.WHITEQUEEN.value:
-
-            # Determine the vertical and horizontal movement positions
-
-            # Determine left move positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newX = x - i
-
-                if newX >= 0 and newX < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
-                    landingSquare = self.board[y][newX]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((newX, y, False))
-
-                    # Square has a black piece, append and stop, capture
-                    elif landingSquare < 0:
-                        positions.append((newX, y, True))
-                        break
-
-                    # Square has a white piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine right move positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newX = x + i
-
-                if newX >= 0 and newX < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
-                    landingSquare = self.board[y][newX]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((newX, y, False))
-
-                    # Square has a black piece, append and stop, capture
-                    elif landingSquare < 0:
-                        positions.append((newX, y, True))
-                        break
-
-                    # Square has a white piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine up positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newY = y - i
-
-                if newY >= 0 and newY < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
-                    landingSquare = self.board[newY][x]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((x, newY, False))
-
-                    # Square has a black piece, append and stop, capture
-                    elif landingSquare < 0:
-                        positions.append((x, newY, True))
-                        break
-
-                    # Square has a white piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine down positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newY = y + i
-
-                if newY >= 0 and newY < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
-                    landingSquare = self.board[newY][x]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((x, newY, False))
-
-                    # Square has a black piece, append and stop, capture
-                    elif landingSquare < 0:
-                        positions.append((x, newY, True))
-                        break
-
-                    # Square has a white piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine the diagnal movement positions
-
-            # Determine the up right movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x + i
-                newY = y - i
-                
-                # Determine if the up right movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is black square, append and stop going, capture
-                elif landingSquare < 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is white square, no new move and stop going
-                else:
-                    break
-
-            # Determine the up left movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x - i
-                newY = y - i
-                
-                # Determine if the up left movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is black square, append and stop going, capture
-                elif landingSquare < 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is white square, no new move and stop going
-                else:
-                    break
-
-            # Determine the down left movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x - i
-                newY = y + i
-                
-                # Determine if the down left movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is black square, append and stop going, capture
-                elif landingSquare < 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is white square, no new move and stop going
-                else:
-                    break
-
-            # Determine the down right movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x + i
-                newY = y + i
-                
-                # Determine if the down right movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is black square, append and stop going, capture
-                elif landingSquare < 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is white square, no new move and stop going
-                else:
-                    break
-
-        
-        # Black Queen movement positions
-        elif piece == PieceType.BLACKQUEEN.value:
-
-            # Determine the vertical and horizontal movement positions
-
-             # Determine left move positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newX = x - i
-
-                if newX >= 0 and newX < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
-                    landingSquare = self.board[y][newX]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((newX, y, False))
-
-                    # Square has a white piece, append and stop, capture
-                    elif landingSquare > 0:
-                        positions.append((newX, y, True))
-                        break
-
-                    # Square has a white piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine right move positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newX = x + i
-
-                if newX >= 0 and newX < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
-                    landingSquare = self.board[y][newX]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((newX, y, False))
-
-                    # Square has a white piece, append and stop, capture
-                    elif landingSquare > 0:
-                        positions.append((newX, y, True))
-                        break
-
-                    # Square has a black piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine up positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newY = y - i
-
-                if newY >= 0 and newY < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
-                    landingSquare = self.board[newY][x]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((x, newY, False))
-
-                    # Square has a white piece, append and stop, capture
-                    elif landingSquare > 0:
-                        positions.append((x, newY, True))
-                        break
-
-                    # Square has a black piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine down positions
-            for i in range(1, 8):
-
-                # Determine if the movement is in bounds
-                newY = y + i
-
-                if newY >= 0 and newY < Chess.BOARD_SIZE:
-
-                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
-                    landingSquare = self.board[newY][x]
-                    
-                    # Square is empty, append and keep going, no capture
-                    if landingSquare == 0:
-                        positions.append((x, newY, False))
-
-                    # Square has a white piece, append and stop, capture
-                    elif landingSquare > 0:
-                        positions.append((x, newY, True))
-                        break
-
-                    # Square has a black piece, no new move and stop going
-                    else:
-                        break
-
-            # Determine the diagnal movement positions
-
-            # Determine the up right movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x + i
-                newY = y - i
-                
-                # Determine if the up right movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is white square, append and stop going, capture
-                elif landingSquare > 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is black square, no new move and stop going
-                else:
-                    break
-
-            # Determine the up left movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x - i
-                newY = y - i
-                
-                # Determine if the up left movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is white square, append and stop going, capture
-                elif landingSquare > 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is black square, no new move and stop going
-                else:
-                    break
-
-            # Determine the down left movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x - i
-                newY = y + i
-                
-                # Determine if the down left movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is white square, append and stop going, capture
-                elif landingSquare > 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is black square, no new move and stop going
-                else:
-                    break
-
-            # Determine the down right movement positions
-            for i in range(1, 8):
-
-                # Set up the new x and new y variables
-                newX = x + i
-                newY = y + i
-                
-                # Determine if the down right movement is not in bounds, break loop
-                if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    break
-
-                # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
-                landingSquare = self.board[newY][newX]
-
-                # Square is empty, append and keep going, no capture
-                if landingSquare == 0:
-                    positions.append((newX, newY, False))
-
-                # Square is white square, append and stop going, capture
-                elif landingSquare > 0:
-                    positions.append((newX, newY, True))
-                    break
-
-                # Square is black square, no new move and stop going
-                else:
-                    break
-
-
-        # White King movement positions
-        elif piece == PieceType.WHITEKING.value:
-
-            # Define all possible king movement positions, relative to current position
-            potentialPositions = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
-
-            # Determine valid potential positions. 
-            for position in potentialPositions:
-
-                # Determine if move is in bounds
-                newX, newY = (x + position[0]), (y + position[1])
-
-                if newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE:
-
-                    # Move and append no capture if 0 (empty), Move and append with capture if negative (black piece), don't do anything if white piece
+                    # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
                     landingSquare = self.board[newY][newX]
 
-                    # Empty square, move and append (no capture)
+                    # Square is empty, append and keep going, no capture
                     if landingSquare == 0:
                         positions.append((newX, newY, False))
-                    
-                    # Black piece, move and append (capture)
+
+                    # Square is black square, append and stop going, capture
                     elif landingSquare < 0:
                         positions.append((newX, newY, True))
+                        break
 
+                    # Square is white square, no new move and stop going
+                    else:
+                        break
 
-        # Black King movement positions
-        elif piece == PieceType.BLACKKING.value:
+                # Determine the up left movement positions
+                for i in range(1, 8):
 
-            # Define all possible king movement positions, relative to current position
-            potentialPositions = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
+                    # Set up the new x and new y variables
+                    newX = x - i
+                    newY = y - i
+                    
+                    # Determine if the up left movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
 
-            # Determine valid potential positions. 
-            for position in potentialPositions:
-
-                # Determine if move is in bounds
-                newX, newY = (x + position[0]), (y + position[1])
-
-                if newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE:
-
-                    # Move and append no capture if 0 (empty), Move and append with capture if positive (white piece), don't do anything if black piece
+                    # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
                     landingSquare = self.board[newY][newX]
 
-                    # Empty square, move and append (no capture)
+                    # Square is empty, append and keep going, no capture
                     if landingSquare == 0:
                         positions.append((newX, newY, False))
+
+                    # Square is black square, append and stop going, capture
+                    elif landingSquare < 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is white square, no new move and stop going
+                    else:
+                        break
+
+                # Determine the down left movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x - i
+                    newY = y + i
                     
-                    # White piece, move and append (capture)
+                    # Determine if the down left movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is black square, append and stop going, capture
+                    elif landingSquare < 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is white square, no new move and stop going
+                    else:
+                        break
+
+                # Determine the down right movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x + i
+                    newY = y + i
+                    
+                    # Determine if the down right movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is black square, append and stop going, capture
+                    elif landingSquare < 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is white square, no new move and stop going
+                    else:
+                        break
+
+
+            # White Rook movement positions
+            elif piece == PieceType.WHITEROOK.value:
+
+                # Determine left move positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newX = x - i
+
+                    if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                        landingSquare = self.board[y][newX]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((newX, y, False))
+
+                        # Square has a black piece, append and stop, capture
+                        elif landingSquare < 0:
+                            positions.append((newX, y, True))
+                            break
+
+                        # Square has a white piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine right move positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newX = x + i
+
+                    if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                        landingSquare = self.board[y][newX]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((newX, y, False))
+
+                        # Square has a black piece, append and stop, capture
+                        elif landingSquare < 0:
+                            positions.append((newX, y, True))
+                            break
+
+                        # Square has a white piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine up positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newY = y - i
+
+                    if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                        landingSquare = self.board[newY][x]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((x, newY, False))
+
+                        # Square has a black piece, append and stop, capture
+                        elif landingSquare < 0:
+                            positions.append((x, newY, True))
+                            break
+
+                        # Square has a white piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine down positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newY = y + i
+
+                    if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                        landingSquare = self.board[newY][x]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((x, newY, False))
+
+                        # Square has a black piece, append and stop, capture
+                        elif landingSquare < 0:
+                            positions.append((x, newY, True))
+                            break
+
+                        # Square has a white piece, no new move and stop going
+                        else:
+                            break
+
+
+            # Whtie Queen movement positions
+            elif piece == PieceType.WHITEQUEEN.value:
+
+                # Determine the vertical and horizontal movement positions
+
+                # Determine left move positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newX = x - i
+
+                    if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                        landingSquare = self.board[y][newX]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((newX, y, False))
+
+                        # Square has a black piece, append and stop, capture
+                        elif landingSquare < 0:
+                            positions.append((newX, y, True))
+                            break
+
+                        # Square has a white piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine right move positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newX = x + i
+
+                    if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                        landingSquare = self.board[y][newX]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((newX, y, False))
+
+                        # Square has a black piece, append and stop, capture
+                        elif landingSquare < 0:
+                            positions.append((newX, y, True))
+                            break
+
+                        # Square has a white piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine up positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newY = y - i
+
+                    if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                        landingSquare = self.board[newY][x]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((x, newY, False))
+
+                        # Square has a black piece, append and stop, capture
+                        elif landingSquare < 0:
+                            positions.append((x, newY, True))
+                            break
+
+                        # Square has a white piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine down positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newY = y + i
+
+                    if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                        landingSquare = self.board[newY][x]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((x, newY, False))
+
+                        # Square has a black piece, append and stop, capture
+                        elif landingSquare < 0:
+                            positions.append((x, newY, True))
+                            break
+
+                        # Square has a white piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine the diagnal movement positions
+
+                # Determine the up right movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x + i
+                    newY = y - i
+                    
+                    # Determine if the up right movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is black square, append and stop going, capture
+                    elif landingSquare < 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is white square, no new move and stop going
+                    else:
+                        break
+
+                # Determine the up left movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x - i
+                    newY = y - i
+                    
+                    # Determine if the up left movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is black square, append and stop going, capture
+                    elif landingSquare < 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is white square, no new move and stop going
+                    else:
+                        break
+
+                # Determine the down left movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x - i
+                    newY = y + i
+                    
+                    # Determine if the down left movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is black square, append and stop going, capture
+                    elif landingSquare < 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is white square, no new move and stop going
+                    else:
+                        break
+
+                # Determine the down right movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x + i
+                    newY = y + i
+                    
+                    # Determine if the down right movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is black square, append and stop going, capture
+                    elif landingSquare < 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is white square, no new move and stop going
+                    else:
+                        break
+
+
+            # White King movement positions
+            elif piece == PieceType.WHITEKING.value:
+
+                # Define all possible king movement positions, relative to current position
+                potentialPositions = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
+
+                # Determine valid potential positions. 
+                for position in potentialPositions:
+
+                    # Determine if move is in bounds
+                    newX, newY = (x + position[0]), (y + position[1])
+
+                    if newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                        # Move and append no capture if 0 (empty), Move and append with capture if negative (black piece), don't do anything if white piece
+                        landingSquare = self.board[newY][newX]
+
+                        # Empty square, move and append (no capture)
+                        if landingSquare == 0:
+                            positions.append((newX, newY, False))
+                        
+                        # Black piece, move and append (capture)
+                        elif landingSquare < 0:
+                            positions.append((newX, newY, True))
+
+
+        # Black turn, only black can move
+        else:
+            
+            # Black pawn movement positions
+            if piece ==  PieceType.BLACKPAWN.value:
+
+                # TODO promotions
+                # TODO capture
+
+                # Pawns can move forward once at any time
+                positions.append((x, y + 1, False))
+
+                # Pawns can move forward twice if hasnt moved
+                if y == 1:
+                    positions.append((x, y + 2, False))
+
+
+            # Black Knight movement positions
+            elif piece ==  PieceType.BLACKKNIGHT.value:
+
+                # Define positions for knight to move (to add to existing x and y values)
+                potentialPositions = [(-1, -2), (1, -2), (-2, -1), (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1)]
+
+                # Determine where the knight can move
+                for move in potentialPositions:
+                    # Move must be in bounds of the board
+                    if x + move[0] >= 0 and y + move[1] >= 0 and x + move[0] < Chess.BOARD_SIZE and y + move[1] < Chess.BOARD_SIZE:
+                        
+                        # Move cannot land on a black piece
+                        landingSquare = self.board[y + move[1]][x + move[0]]
+
+                        if landingSquare >= 0:
+
+                            # Knight capturing piece
+                            if landingSquare > 0:
+                                positions.append((x + move[0], y + move[1], True))
+                            # Knight not capturing piece
+                            else:
+                                positions.append((x + move[0], y + move[1], False))
+
+
+            # Black Bishop movement positions
+            elif piece == PieceType.BLACKBISHOP.value:
+
+                # Determine the up right movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x + i
+                    newY = y - i
+                    
+                    # Determine if the up right movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is white square, append and stop going, capture
                     elif landingSquare > 0:
                         positions.append((newX, newY, True))
+                        break
 
+                    # Square is black square, no new move and stop going
+                    else:
+                        break
+
+                # Determine the up left movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x - i
+                    newY = y - i
+                    
+                    # Determine if the up left movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is white square, append and stop going, capture
+                    elif landingSquare > 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is black square, no new move and stop going
+                    else:
+                        break
+
+                # Determine the down left movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x - i
+                    newY = y + i
+                    
+                    # Determine if the down left movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is white square, append and stop going, capture
+                    elif landingSquare > 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is black square, no new move and stop going
+                    else:
+                        break
+
+                # Determine the down right movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x + i
+                    newY = y + i
+                    
+                    # Determine if the down right movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is white square, append and stop going, capture
+                    elif landingSquare > 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is black square, no new move and stop going
+                    else:
+                        break
+
+
+            # Black Rook movement positions
+            elif piece == PieceType.BLACKROOK.value:
+
+                # Determine left move positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newX = x - i
+
+                    if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                        landingSquare = self.board[y][newX]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((newX, y, False))
+
+                        # Square has a white piece, append and stop, capture
+                        elif landingSquare > 0:
+                            positions.append((newX, y, True))
+                            break
+
+                        # Square has a white piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine right move positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newX = x + i
+
+                    if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                        landingSquare = self.board[y][newX]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((newX, y, False))
+
+                        # Square has a white piece, append and stop, capture
+                        elif landingSquare > 0:
+                            positions.append((newX, y, True))
+                            break
+
+                        # Square has a black piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine up positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newY = y - i
+
+                    if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                        landingSquare = self.board[newY][x]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((x, newY, False))
+
+                        # Square has a white piece, append and stop, capture
+                        elif landingSquare > 0:
+                            positions.append((x, newY, True))
+                            break
+
+                        # Square has a black piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine down positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newY = y + i
+
+                    if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                        landingSquare = self.board[newY][x]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((x, newY, False))
+
+                        # Square has a white piece, append and stop, capture
+                        elif landingSquare > 0:
+                            positions.append((x, newY, True))
+                            break
+
+                        # Square has a black piece, no new move and stop going
+                        else:
+                            break
+
+
+            # Black Queen movement positions
+            elif piece == PieceType.BLACKQUEEN.value:
+
+                # Determine the vertical and horizontal movement positions
+
+                # Determine left move positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newX = x - i
+
+                    if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                        landingSquare = self.board[y][newX]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((newX, y, False))
+
+                        # Square has a white piece, append and stop, capture
+                        elif landingSquare > 0:
+                            positions.append((newX, y, True))
+                            break
+
+                        # Square has a white piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine right move positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newX = x + i
+
+                    if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                        landingSquare = self.board[y][newX]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((newX, y, False))
+
+                        # Square has a white piece, append and stop, capture
+                        elif landingSquare > 0:
+                            positions.append((newX, y, True))
+                            break
+
+                        # Square has a black piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine up positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newY = y - i
+
+                    if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                        landingSquare = self.board[newY][x]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((x, newY, False))
+
+                        # Square has a white piece, append and stop, capture
+                        elif landingSquare > 0:
+                            positions.append((x, newY, True))
+                            break
+
+                        # Square has a black piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine down positions
+                for i in range(1, 8):
+
+                    # Determine if the movement is in bounds
+                    newY = y + i
+
+                    if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                        # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                        landingSquare = self.board[newY][x]
+                        
+                        # Square is empty, append and keep going, no capture
+                        if landingSquare == 0:
+                            positions.append((x, newY, False))
+
+                        # Square has a white piece, append and stop, capture
+                        elif landingSquare > 0:
+                            positions.append((x, newY, True))
+                            break
+
+                        # Square has a black piece, no new move and stop going
+                        else:
+                            break
+
+                # Determine the diagnal movement positions
+
+                # Determine the up right movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x + i
+                    newY = y - i
+                    
+                    # Determine if the up right movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is white square, append and stop going, capture
+                    elif landingSquare > 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is black square, no new move and stop going
+                    else:
+                        break
+
+                # Determine the up left movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x - i
+                    newY = y - i
+                    
+                    # Determine if the up left movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is white square, append and stop going, capture
+                    elif landingSquare > 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is black square, no new move and stop going
+                    else:
+                        break
+
+                # Determine the down left movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x - i
+                    newY = y + i
+                    
+                    # Determine if the down left movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is white square, append and stop going, capture
+                    elif landingSquare > 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is black square, no new move and stop going
+                    else:
+                        break
+
+                # Determine the down right movement positions
+                for i in range(1, 8):
+
+                    # Set up the new x and new y variables
+                    newX = x + i
+                    newY = y + i
+                    
+                    # Determine if the down right movement is not in bounds, break loop
+                    if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
+                        break
+
+                    # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
+                    landingSquare = self.board[newY][newX]
+
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, newY, False))
+
+                    # Square is white square, append and stop going, capture
+                    elif landingSquare > 0:
+                        positions.append((newX, newY, True))
+                        break
+
+                    # Square is black square, no new move and stop going
+                    else:
+                        break
+
+
+            # Black King movement positions
+            elif piece == PieceType.BLACKKING.value:
+
+                # Define all possible king movement positions, relative to current position
+                potentialPositions = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
+
+                # Determine valid potential positions. 
+                for position in potentialPositions:
+
+                    # Determine if move is in bounds
+                    newX, newY = (x + position[0]), (y + position[1])
+
+                    if newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                        # Move and append no capture if 0 (empty), Move and append with capture if positive (white piece), don't do anything if black piece
+                        landingSquare = self.board[newY][newX]
+
+                        # Empty square, move and append (no capture)
+                        if landingSquare == 0:
+                            positions.append((newX, newY, False))
+                        
+                        # White piece, move and append (capture)
+                        elif landingSquare > 0:
+                            positions.append((newX, newY, True))
 
 
 
