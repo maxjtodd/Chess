@@ -18,6 +18,9 @@ class ChessVisual:
         # Stores images to prevent from being garbage collected
         self.images = set()
 
+        # Store the starting point of a selected square
+        self.oldPosition = (0,0)
+
         # Stores potential moves for clicked piece to highlight
         self.selectedPotentialMoves = []
 
@@ -130,8 +133,11 @@ class ChessVisual:
         # Prevent photo from being garbage collected
         self.images.add(pieceImageTk)
 
+        # Create tag name to later get the image
+        tagName = str(x) + ", " + str(y)
+
         # Add image to the canvas
-        canvas.create_image((0,0), image=pieceImageTk, anchor='nw')
+        canvas.create_image((0,0), image=pieceImageTk, anchor='nw', tag=tagName)
 
 
     def movePiece(self, oldX : int, oldY : int, newX : int, newY : int):
@@ -141,14 +147,22 @@ class ChessVisual:
 
         # Get piece on grid
         pieceToMove = self.window.grid_slaves(row=oldY, column=oldX)[0]
-        piece = pieceToMove.cget("text")
         
         # Remove piece to move
         pieceToMove.grid_remove()
 
-        # Create the piece at the new position
-        label = tk.Label(self.window, text=piece)
-        label.grid(row=newY, column=newX)
+        # Set new background color of the canvas
+        total = newX + newY
+        backgroundColor = "yellow"
+        if total % 2 == 0:
+            backgroundColor = "LemonChiffon2"
+        else:
+            backgroundColor = "burlywood3"
+
+        pieceToMove.configure(bg=backgroundColor)
+
+        # Set the position of the new piece
+        pieceToMove.grid(row=newY, column=newX)
 
     
     def highlightPotentialMoves(self):
@@ -189,7 +203,7 @@ class ChessVisual:
         # Get relative position of grid
         z = self.window.grid_location(x, y)
 
-        print(z)
+        # print(z)
         justMoved = False
 
         # Determine if clicked piece is in the potential moves for selected piece
@@ -206,6 +220,11 @@ class ChessVisual:
                     # Piece moved, remove the highlights
                     self.removeHighlights()
 
+                    # Move piece in game representation
+                    self.game.movePiece(self.oldPosition[0], self.oldPosition[1], move[0], move[1])
+                    self.movePiece(self.oldPosition[0], self.oldPosition[1], move[0], move[1])
+                    # self.setAllPieces()
+
 
         # No piece was moved, select new piece
         if not justMoved:
@@ -221,10 +240,13 @@ class ChessVisual:
 
                 # Update the potential moves based on selected piece
                 self.selectedPotentialMoves = self.game.canMoveTo(z[0], z[1])
-                print("SELECTING")
+                # print("SELECTING")
 
                 # Highlight the selected piece's potential moves
                 self.highlightPotentialMoves()
+
+                # Store position as old position
+                self.oldPosition = (z[0], z[1])
 
 
 

@@ -171,7 +171,6 @@ class Chess:
                 
                 # Determine if the up right movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
@@ -199,7 +198,6 @@ class Chess:
                 
                 # Determine if the up left movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
@@ -227,7 +225,6 @@ class Chess:
                 
                 # Determine if the down left movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
@@ -255,7 +252,6 @@ class Chess:
                 
                 # Determine if the down right movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
@@ -290,7 +286,6 @@ class Chess:
                 
                 # Determine if the up right movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
@@ -318,7 +313,6 @@ class Chess:
                 
                 # Determine if the up left movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
@@ -346,7 +340,6 @@ class Chess:
                 
                 # Determine if the down left movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
@@ -374,7 +367,6 @@ class Chess:
                 
                 # Determine if the down right movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
@@ -706,7 +698,6 @@ class Chess:
                 
                 # Determine if the up right movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
@@ -734,7 +725,6 @@ class Chess:
                 
                 # Determine if the up left movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
@@ -762,7 +752,6 @@ class Chess:
                 
                 # Determine if the down left movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
@@ -790,7 +779,6 @@ class Chess:
                 
                 # Determine if the down right movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if black then stop, stop if white
@@ -922,7 +910,6 @@ class Chess:
                 
                 # Determine if the up right movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
@@ -950,7 +937,6 @@ class Chess:
                 
                 # Determine if the up left movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
@@ -978,7 +964,6 @@ class Chess:
                 
                 # Determine if the down left movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
@@ -1006,7 +991,6 @@ class Chess:
                 
                 # Determine if the down right movement is not in bounds, break loop
                 if not(newX >= 0 and newX < Chess.BOARD_SIZE and newY >= 0 and newY < Chess.BOARD_SIZE):
-                    print((x + i), ", ", (y - i), "  not in bounds")
                     break
 
                 # In bounds, keep adding if sqares are empty. Add if white then stop, stop if black
@@ -1080,7 +1064,7 @@ class Chess:
 
 
 
-        print(positions)
+        # print(positions)
         return positions
 
         
