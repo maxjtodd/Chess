@@ -16,8 +16,8 @@ class Chess:
         self.board = Chess.initializeGame()
 
         # TODO: remove line under
-        self.board[4][4] = -3
-        #self.board[4][5] = 2
+        self.board[4][4] = -4
+        # self.board[6][4] = -1
 
         self.whiteTurn = True
 
@@ -391,7 +391,204 @@ class Chess:
                     break
 
 
+        # White Rook movement positions
+        elif piece == PieceType.WHITEROOK.value:
 
+            # Determine left move positions
+            for i in range(1, 8):
+
+                # Determine if the movement is in bounds
+                newX = x - i
+
+                if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                    landingSquare = self.board[y][newX]
+                    
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, y, False))
+
+                    # Square has a black piece, append and stop, capture
+                    elif landingSquare < 0:
+                        positions.append((newX, y, True))
+                        break
+
+                    # Square has a white piece, no new move and stop going
+                    else:
+                        break
+
+            # Determine right move positions
+            for i in range(1, 8):
+
+                # Determine if the movement is in bounds
+                newX = x + i
+
+                if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                    landingSquare = self.board[y][newX]
+                    
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, y, False))
+
+                    # Square has a black piece, append and stop, capture
+                    elif landingSquare < 0:
+                        positions.append((newX, y, True))
+                        break
+
+                    # Square has a white piece, no new move and stop going
+                    else:
+                        break
+
+            # Determine up positions
+            for i in range(1, 8):
+
+                # Determine if the movement is in bounds
+                newY = y - i
+
+                if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                    landingSquare = self.board[newY][x]
+                    
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((x, newY, False))
+
+                    # Square has a black piece, append and stop, capture
+                    elif landingSquare < 0:
+                        positions.append((x, newY, True))
+                        break
+
+                    # Square has a white piece, no new move and stop going
+                    else:
+                        break
+
+            # Determine down positions
+            for i in range(1, 8):
+
+                # Determine if the movement is in bounds
+                newY = y + i
+
+                if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                    # Determine movement options. Append and keep going if square is 0, append and stop if black, stop if white
+                    landingSquare = self.board[newY][x]
+                    
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((x, newY, False))
+
+                    # Square has a black piece, append and stop, capture
+                    elif landingSquare < 0:
+                        positions.append((x, newY, True))
+                        break
+
+                    # Square has a white piece, no new move and stop going
+                    else:
+                        break
+
+
+        # White Rook movement positions
+        elif piece == PieceType.BLACKROOK.value:
+
+            # Determine left move positions
+            for i in range(1, 8):
+
+                # Determine if the movement is in bounds
+                newX = x - i
+
+                if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                    landingSquare = self.board[y][newX]
+                    
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, y, False))
+
+                    # Square has a white piece, append and stop, capture
+                    elif landingSquare > 0:
+                        positions.append((newX, y, True))
+                        break
+
+                    # Square has a white piece, no new move and stop going
+                    else:
+                        break
+
+            # Determine right move positions
+            for i in range(1, 8):
+
+                # Determine if the movement is in bounds
+                newX = x + i
+
+                if newX >= 0 and newX < Chess.BOARD_SIZE:
+
+                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                    landingSquare = self.board[y][newX]
+                    
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((newX, y, False))
+
+                    # Square has a white piece, append and stop, capture
+                    elif landingSquare > 0:
+                        positions.append((newX, y, True))
+                        break
+
+                    # Square has a black piece, no new move and stop going
+                    else:
+                        break
+
+            # Determine up positions
+            for i in range(1, 8):
+
+                # Determine if the movement is in bounds
+                newY = y - i
+
+                if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                    landingSquare = self.board[newY][x]
+                    
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((x, newY, False))
+
+                    # Square has a white piece, append and stop, capture
+                    elif landingSquare > 0:
+                        positions.append((x, newY, True))
+                        break
+
+                    # Square has a black piece, no new move and stop going
+                    else:
+                        break
+
+            # Determine down positions
+            for i in range(1, 8):
+
+                # Determine if the movement is in bounds
+                newY = y + i
+
+                if newY >= 0 and newY < Chess.BOARD_SIZE:
+
+                    # Determine movement options. Append and keep going if square is 0, append and stop if white, stop if black
+                    landingSquare = self.board[newY][x]
+                    
+                    # Square is empty, append and keep going, no capture
+                    if landingSquare == 0:
+                        positions.append((x, newY, False))
+
+                    # Square has a white piece, append and stop, capture
+                    elif landingSquare > 0:
+                        positions.append((x, newY, True))
+                        break
+
+                    # Square has a black piece, no new move and stop going
+                    else:
+                        break
 
 
 
