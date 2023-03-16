@@ -1073,6 +1073,56 @@ class Chess:
 
 
     def printBoard(self):
+
         for row in self.board:
-            print(row)
+
+            for val in row:
+
+                p = ""
+
+                if val == 1:
+                    p = "wP"
+
+                elif val == 2:
+                    p = "wK"
+
+                elif val == 3:
+                    p = "wB"
+
+                elif val == 4:
+                    p = "wR"
+
+                elif val == 5:
+                    p = "wQ"
+
+                elif val == 6:
+                    p = "wO"
+
+                elif val == -1:
+                    p = "bP"
+
+                elif val == -2:
+                    p = "bK"
+
+                elif val == -3:
+                    p = "bB"
+
+                elif val == -4:
+                    p = "bR"
+
+                elif val == -5:
+                    p = "bQ"
+
+                elif val == -6:
+                    p = "bO"
+
+                else:
+                    p = "."
+
+                print('{:3s}'.format(p), end='   ')
+
+            print("\n")
+
+        print("-------------------------------------------")
+
 

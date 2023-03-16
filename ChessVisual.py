@@ -140,7 +140,7 @@ class ChessVisual:
         canvas.create_image((0,0), image=pieceImageTk, anchor='nw', tag=tagName)
 
 
-    def movePiece(self, oldX : int, oldY : int, newX : int, newY : int):
+    def movePiece(self, oldX : int, oldY : int, newX : int, newY : int, capture : bool):
         """
         Move the piece from one position to another
         """
@@ -150,6 +150,11 @@ class ChessVisual:
         
         # Remove piece to move
         pieceToMove.grid_remove()
+
+        # Capture occured, remove piece underneath
+        if capture:
+            underneathPiece = self.window.grid_slaves(row=newY, column=newX)[0]
+            underneathPiece.grid_remove()
 
         # Set new background color of the canvas
         total = newX + newY
@@ -163,6 +168,10 @@ class ChessVisual:
 
         # Set the position of the new piece
         pieceToMove.grid(row=newY, column=newX)
+
+
+        # TODO Remove
+        self.game.printBoard()
 
     
     def highlightPotentialMoves(self):
@@ -222,7 +231,7 @@ class ChessVisual:
 
                     # Move piece in game representation
                     self.game.movePiece(self.oldPosition[0], self.oldPosition[1], move[0], move[1])
-                    self.movePiece(self.oldPosition[0], self.oldPosition[1], move[0], move[1])
+                    self.movePiece(self.oldPosition[0], self.oldPosition[1], move[0], move[1], move[2])
                     # self.setAllPieces()
 
 
