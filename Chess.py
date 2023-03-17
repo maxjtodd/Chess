@@ -66,14 +66,14 @@ class Chess:
         enPassant = False
 
         # Check for white en passant capture
-        if piece == PieceType.WHITEPAWN.value and newX in self.twoBlackPawnMovement and self.board[newY][newX] == 0:
+        if piece == PieceType.WHITEPAWN.value and newX in self.twoBlackPawnMovement and self.board[newY][newX] == 0 and capture:
 
             # En passant occured
             self.board[oldY][newX] = 0
             enPassant = True
 
         # Check for black en passant capture
-        elif piece == PieceType.BLACKPAWN.value and newX in self.twoWhitePawnMovement and self.board[newY][newX] == 0:
+        elif piece == PieceType.BLACKPAWN.value and newX in self.twoWhitePawnMovement and self.board[newY][newX] == 0 and capture:
 
             # En passant occured
             self.board[oldY][newX] = 0
@@ -84,6 +84,10 @@ class Chess:
 
 
         # TODO Check for check
+        check = False
+
+        # TODO Check for promotion
+        promotion = False
 
 
         # Check for white en passant values
@@ -94,10 +98,11 @@ class Chess:
         elif piece == PieceType.BLACKPAWN.value and (newY - oldY) == 2:
             self.twoBlackPawnMovement.add(newX)
 
-        
-
         # Set other player turn
         self.whiteTurn = not self.whiteTurn
+
+        # Return move information in form of (check, promotion, enPassant)
+        return (check, promotion, enPassant)
 
     
     def canMoveTo(self, x : int, y : int) -> list:

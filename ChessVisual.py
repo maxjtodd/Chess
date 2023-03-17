@@ -140,34 +140,55 @@ class ChessVisual:
         canvas.create_image((0,0), image=pieceImageTk, anchor='nw', tag=tagName)
 
 
-    def movePiece(self, oldX : int, oldY : int, newX : int, newY : int, capture : bool):
+    def movePiece(self, oldX : int, oldY : int, newX : int, newY : int, capture : bool, moveInfo : tuple):
         """
         Move the piece from one position to another
         """
 
-        # Get piece on grid
-        pieceToMove = self.window.grid_slaves(row=oldY, column=oldX)[0]
-        
-        # Remove piece to move
-        pieceToMove.grid_remove()
+        # En Passant or Promotion occured, special operations in order
+        if moveInfo[1] or moveInfo[2]:
+            
+            # TODO Promotion occured
 
-        # Capture occured, remove piece underneath
-        if capture:
-            underneathPiece = self.window.grid_slaves(row=newY, column=newX)[0]
-            underneathPiece.grid_remove()
+            # En passant occured
+            if moveInfo[2]:
+                
+                # Remove pawn captured
+                pawnToRemove = self.window.grid_slaves(row=oldY, column=newX)[0]
+                pawnToRemove.grid_remove()
 
-        # Set new background color of the canvas
-        total = newX + newY
-        backgroundColor = "yellow"
-        if total % 2 == 0:
-            backgroundColor = "LemonChiffon2"
+                # Place pawn capturing on grid
+                pieceToMove = self.window.grid_slaves(row=oldY, column=oldX)[0]
+                pieceToMove.grid(row=newY, column=newX)
+
+
+
         else:
-            backgroundColor = "burlywood3"
 
-        pieceToMove.configure(bg=backgroundColor)
+            # Get piece on grid
+            pieceToMove = self.window.grid_slaves(row=oldY, column=oldX)[0]
+            
+            # Remove piece to move
+            pieceToMove.grid_remove()
 
-        # Set the position of the new piece
-        pieceToMove.grid(row=newY, column=newX)
+
+            # Capture occured (not en passant), remove piece underneath
+            if capture:
+                underneathPiece = self.window.grid_slaves(row=newY, column=newX)[0]
+                underneathPiece.grid_remove()
+
+            # Set new background color of the canvas
+            total = newX + newY
+            backgroundColor = "yellow"
+            if total % 2 == 0:
+                backgroundColor = "LemonChiffon2"
+            else:
+                backgroundColor = "burlywood3"
+
+            pieceToMove.configure(bg=backgroundColor)
+
+            # Set the position of the new piece
+            pieceToMove.grid(row=newY, column=newX)
 
 
         # TODO Remove
@@ -212,7 +233,7 @@ class ChessVisual:
         # Get relative position of grid
         z = self.window.grid_location(x, y)
 
-        print(z)
+        # print(z)
         justMoved = False
 
         # Determine if clicked piece is in the potential moves for selected piece
@@ -230,10 +251,14 @@ class ChessVisual:
                     self.removeHighlights()
 
                     # Move piece in game representation
-                    self.game.movePiece(self.oldPosition[0], self.oldPosition[1], move)
+                    moveInfo = self.game.movePiece(self.oldPosition[0], self.oldPosition[1], move)
+
+                    # TODO Promotion
+                    
+                    # Check for en passant capture
 
                     # Move piece visually
-                    self.movePiece(self.oldPosition[0], self.oldPosition[1], move[0], move[1], move[2])
+                    self.movePiece(self.oldPosition[0], self.oldPosition[1], move[0], move[1], move[2], moveInfo)
 
 
         # No piece was moved, select new piece
