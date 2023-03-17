@@ -233,7 +233,7 @@ class ChessVisual:
         # Get relative position of grid
         z = self.window.grid_location(x, y)
 
-        print(z)
+        # print(z)
         justMoved = False
 
         # Determine if clicked piece is in the potential moves for selected piece
@@ -282,6 +282,10 @@ class ChessVisual:
 
                 # Store position as old position
                 self.oldPosition = (z[0], z[1])
+
+            # Empty tile selected, remove highlights
+            else:
+                self.removeHighlights()
 
 
 

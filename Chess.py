@@ -19,6 +19,10 @@ class Chess:
         # Keeps track of turns
         self.whiteTurn = True
 
+        # Keeps track of whether or not king is in check
+        self.whiteInCheck = False
+        self.blackInCheck = False
+
         # Keeps track of en passent possibilities
         self.twoWhitePawnMovement = set()
         self.twoBlackPawnMovement = set()
@@ -97,6 +101,8 @@ class Chess:
         # Check for black en passant values
         elif piece == PieceType.BLACKPAWN.value and (newY - oldY) == 2:
             self.twoBlackPawnMovement.add(newX)
+
+        # TODO Check for check
 
         # Set other player turn
         self.whiteTurn = not self.whiteTurn
@@ -1169,8 +1175,13 @@ class Chess:
         return positions
 
         
-        
+    def checkCheck(self):
+        """
+        Determines whether check is given
+        """
 
+        # Black turn, check white for check
+        
 
 
     def printBoard(self):
