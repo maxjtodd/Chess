@@ -1,5 +1,6 @@
 from Pieces import *
 
+
 class Chess:
     """
     Controls the environment for chess
@@ -15,11 +16,12 @@ class Chess:
         """
         self.board = Chess.initializeGame()
 
-        # TODO: remove line under
-        # self.board[2][4] = 6
-        # self.board[6][4] = -1
-
+        # Keeps track of turns
         self.whiteTurn = True
+
+        # Keeps track of en passent possibilities
+        self.twoWhitePawnMovement = set()
+        self.twoBlackPawnMovement = set()
 
 
     def initializeGame() -> list:
@@ -42,16 +44,57 @@ class Chess:
         return board
     
 
-    def movePiece(self, oldX : int, oldY : int, newX : int, newY : int) -> None:
+    def movePiece(self, oldX : int, oldY : int, move : tuple) -> None:
         """
         Moves piece from one position to another. Should only be called when the piece
         is available to be moved to the new position.
+        - oldX: old x position of piece to be moved
+        - oldY: old y position of piece to be moved
+        - move: tuple from function canMoveTo containing information about move
         """
 
-        # Move piece
+        # Get piece information
         piece = self.board[oldY][oldX]
         self.board[oldY][oldX] = 0
+
+        # Get new movement piece information
+        newX = move[0]
+        newY = move[1]
+        capture = move[2]
+
+        # Check for en passant captures
+        enPassant = False
+
+        # Check for white en passant capture
+        if piece == PieceType.WHITEPAWN.value and newX in self.twoBlackPawnMovement and self.board[newY][newX] == 0:
+
+            # En passant occured
+            self.board[oldY][newX] = 0
+            enPassant = True
+
+        # Check for black en passant capture
+        elif piece == PieceType.BLACKPAWN.value and newX in self.twoWhitePawnMovement and self.board[newY][newX] == 0:
+
+            # En passant occured
+            self.board[oldY][newX] = 0
+            enPassant = True
+
+        # Move piece
         self.board[newY][newX] = piece
+
+
+        # TODO Check for check
+
+
+        # Check for white en passant values
+        if piece == PieceType.WHITEPAWN.value and (oldY - newY) == 2:
+            self.twoWhitePawnMovement.add(newX)
+
+        # Check for black en passant values
+        elif piece == PieceType.BLACKPAWN.value and (newY - oldY) == 2:
+            self.twoBlackPawnMovement.add(newX)
+
+        
 
         # Set other player turn
         self.whiteTurn = not self.whiteTurn
@@ -109,6 +152,18 @@ class Chess:
                         if self.board[position[1]][position[0]] < 0:
                             positions.append((position[0], position[1], True))
 
+                # Determine en passant capture movements
+
+                # Check left en passant
+                if (x - 1) in self.twoBlackPawnMovement and y == 3:
+                    # Left en passant possible, append as capture
+                    positions.append((x - 1, y - 1, True))
+
+                # Check right en passant
+                if (x + 1) in self.twoBlackPawnMovement and y == 3:
+                    # Right en passant possible, append as capture
+                    positions.append((x + 1, y - 1, True))
+                
 
                 # Pawns can move forward twice if hasnt moved
                 if y == 6:
@@ -596,7 +651,6 @@ class Chess:
             if piece ==  PieceType.BLACKPAWN.value:
 
                 # TODO promotions
-                # TODO capture
 
                 # Pawns can move forward once at any time
                 positions.append((x, y + 1, False))
@@ -611,6 +665,18 @@ class Chess:
                         # Determine if piece in capture square is white
                         if self.board[position[1]][position[0]] > 0:
                             positions.append((position[0], position[1], True))
+
+                # Determine en passant capture movements
+
+                # Check left en passant
+                if (x - 1) in self.twoWhitePawnMovement and y == 4:
+                    # Left en passant possible, append as capture
+                    positions.append((x - 1, y + 1, True))
+
+                # Check right en passant
+                if (x + 1) in self.twoWhitePawnMovement and y == 4:
+                    # Right en passant possible, append as capture
+                    positions.append((x + 1, y + 1, True))
 
                 # Pawns can move forward twice if hasnt moved
                 if y == 1:

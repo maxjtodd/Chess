@@ -212,7 +212,7 @@ class ChessVisual:
         # Get relative position of grid
         z = self.window.grid_location(x, y)
 
-        # print(z)
+        print(z)
         justMoved = False
 
         # Determine if clicked piece is in the potential moves for selected piece
@@ -230,9 +230,10 @@ class ChessVisual:
                     self.removeHighlights()
 
                     # Move piece in game representation
-                    self.game.movePiece(self.oldPosition[0], self.oldPosition[1], move[0], move[1])
+                    self.game.movePiece(self.oldPosition[0], self.oldPosition[1], move)
+
+                    # Move piece visually
                     self.movePiece(self.oldPosition[0], self.oldPosition[1], move[0], move[1], move[2])
-                    # self.setAllPieces()
 
 
         # No piece was moved, select new piece
