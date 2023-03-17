@@ -233,7 +233,7 @@ class ChessVisual:
         # Get relative position of grid
         z = self.window.grid_location(x, y)
 
-        # print(z)
+        print(z)
         justMoved = False
 
         # Determine if clicked piece is in the potential moves for selected piece

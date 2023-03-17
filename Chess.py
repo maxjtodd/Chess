@@ -73,7 +73,7 @@ class Chess:
             enPassant = True
 
         # Check for black en passant capture
-        elif piece == PieceType.BLACKPAWN.value and newX in self.twoWhitePawnMovement and self.board[newY][newX] == 0 and capture:
+        elif piece == PieceType.BLACKPAWN.value and newX in self.twoWhitePawnMovement and self.board[newY][newX] == 0 and capture :
 
             # En passant occured
             self.board[oldY][newX] = 0
@@ -143,8 +143,9 @@ class Chess:
 
                 # TODO promotions
 
-                # Pawns can move forward once at any time
-                positions.append((x, y - 1, False))
+                # Pawns can move forward once at any time if nothing blocking it's path
+                if self.board[y - 1][x] == 0:
+                    positions.append((x, y - 1, False))
 
                 # Determine regular capture movements
                 potentialPositions = [(x - 1, y - 1), (x + 1, y - 1)]
@@ -170,8 +171,8 @@ class Chess:
                     positions.append((x + 1, y - 1, True))
                 
 
-                # Pawns can move forward twice if hasnt moved
-                if y == 6:
+                # Pawns can move forward twice if hasnt moved and nothing blocking it's path
+                if y == 6 and self.board[y - 2][x] == 0:
                     positions.append((x, y - 2, False))
 
 
@@ -657,8 +658,9 @@ class Chess:
 
                 # TODO promotions
 
-                # Pawns can move forward once at any time
-                positions.append((x, y + 1, False))
+                # Pawns can move forward once at any time if nothing blocking it's path
+                if self.board[y + 1][x] == 0:
+                    positions.append((x, y + 1, False))
 
                 # Determine regular capture movements
                 potentialPositions = [(x - 1, y + 1), (x + 1, y + 1)]
@@ -683,8 +685,8 @@ class Chess:
                     # Right en passant possible, append as capture
                     positions.append((x + 1, y + 1, True))
 
-                # Pawns can move forward twice if hasnt moved
-                if y == 1:
+                # Pawns can move forward twice if hasnt moved and nothing blocking it's path
+                if y == 1 and self.board[y + 2][x] == 0:
                     positions.append((x, y + 2, False))
 
 
