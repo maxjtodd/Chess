@@ -21,6 +21,9 @@ class Chess:
         # stores the game board
         self.board = Chess.initializeGame()
 
+        # Create the pieces
+        self.initializePieces()
+
         # Keeps track of turns
         self.whiteTurn = True
 
@@ -52,6 +55,60 @@ class Chess:
         
         return board
     
+
+    def initializePieces(self):
+        """
+        Create the pieces for the game
+        """
+
+        # Add white pawns
+        for i in range(8):
+            self.whitePieces.append(WhitePawn(i, 6))
+
+        # Add white knights
+        self.whitePieces.append(WhiteKnight(1, 7))
+        self.whitePieces.append(WhiteKnight(6, 7))
+
+        # Add white bishops
+        self.whitePieces.append(WhiteBishop(2, 7))
+        self.whitePieces.append(WhiteBishop(5, 7))
+
+        # Add white rooks
+        self.whitePieces.append(WhiteRook(0, 7))
+        self.whitePieces.append(WhiteRook(7, 7))
+
+        # Add white queen
+        self.whitePieces.append(WhiteQueen(3, 7))
+
+        # Add white king
+        self.whitePieces.append(WhiteKing(4, 7))
+
+
+        # Place black pawns
+        for i in range(8):
+            self.blackPieces.append(BlackPawn(i, 1))
+
+        # Place black knights
+        self.blackPieces.append(BlackKnight(1, 0))
+        self.blackPieces.append(BlackKnight(6, 0))
+
+        # Place black bishops
+        self.blackPieces.append(BlackBishop(2, 0))
+        self.blackPieces.append(BlackBishop(5, 0))
+
+        # Place the black rooks
+        self.blackPieces.append(BlackRook(0, 0))
+        self.blackPieces.append(BlackRook(7, 0))
+
+        # Place black queen
+        self.blackPieces.append(BlackQueen(3, 0))
+
+        # Place black king
+        self.blackPieces.append(BlackKing(4, 0))
+
+        for p in self.blackPieces:
+            p.printPiece()
+
 
     def movePiece(self, oldX : int, oldY : int, move : tuple) -> None:
         """
@@ -309,6 +366,9 @@ class Piece:
         Defines where a piece can to, implement in each subclass
         """
         raise NotImplementedError
+
+    def printPiece(self):
+        print('type', self.type, ', (', self.x, ', ', self.y, ')')
 
 class WhitePawn(Piece):
     """
@@ -655,7 +715,7 @@ class WhiteQueen(Piece):
     """
     def __init__(self, x, y) -> None:
 
-        self.type = PieceType.WHITEROOK.value
+        self.type = PieceType.WHITEQUEEN.value
         self.x = x
         self.y = y
  
@@ -1520,3 +1580,9 @@ class BlackKing(Piece):
                     positions.append((newX, newY, True))
 
         return positions
+
+
+
+# TEST
+print(1)
+c = Chess()
