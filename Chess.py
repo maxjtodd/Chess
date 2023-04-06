@@ -14,6 +14,10 @@ class Chess:
         - board: 2d array with 0's as empty space and piece values according to PieceType enum
         - whiteTurn: True if the turn is white, false if the turn is black
         """
+        # Stores the pieces
+        self.whitePieces = []
+        self.blackPieces = []
+
         # stores the game board
         self.board = Chess.initializeGame()
 
@@ -291,8 +295,32 @@ class Chess:
 
 
 class Piece:
+    """
+    Defines the componenets of a piece needed for inheritance for other pieces
+    """
+    def __init__(self) -> None:
+        
+        self.type = 0
+        self.x = -1
+        self.y = -1
 
-    def whitePawnCanMoveTo(x : int, y : int, game : Chess) -> list:
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
+        """
+        Defines where a piece can to, implement in each subclass
+        """
+        raise NotImplementedError
+
+class WhitePawn(Piece):
+    """
+    White Pawn
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.WHITEPAWN.value
+        self.x = x
+        self.y = y
+        
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
         """
         Defines all of the squares that
         """
@@ -335,7 +363,19 @@ class Piece:
 
         return positions
     
-    def whiteKnightCanMoveTo(x : int, y : int, game : Chess) -> list:
+
+
+class WhiteKnight(Piece):
+    """
+    White Knight
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.WHITEKNIGHT.value
+        self.x = x
+        self.y = y
+ 
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
 
         # Define movment options the knight can go to
         positions = []
@@ -362,7 +402,20 @@ class Piece:
 
         return positions
     
-    def whiteBishopCanMoveTo(x : int, y : int, game : Chess) -> list:
+
+
+class WhiteBishop(Piece):
+    """
+    White Bishop
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.WHITEBISHOP.value
+        self.x = x
+        self.y = y
+ 
+
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
 
         # Define positions white can mvoe to
         positions = []
@@ -478,7 +531,20 @@ class Piece:
 
         return positions
     
-    def whiteRookCanMoveTo(x : int, y : int, game : Chess) -> list:
+
+
+class WhiteRook(Piece):
+    """
+    White Rook
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.WHITEROOK.value
+        self.x = x
+        self.y = y
+ 
+
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
 
         # Define positions that rook can move to
         positions = []
@@ -581,7 +647,19 @@ class Piece:
 
         return positions
     
-    def whiteQueenCanMoveTo(x : int, y : int, game : Chess) -> list:
+
+
+class WhiteQueen(Piece):
+    """
+    White Queen
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.WHITEROOK.value
+        self.x = x
+        self.y = y
+ 
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
 
         # Define positions the queen can move to
         positions = []
@@ -797,7 +875,19 @@ class Piece:
 
         return positions
     
-    def whiteKingCanMoveTo(x : int, y : int, game : Chess) -> list:
+
+
+class WhiteKing(Piece):
+    """
+    White King
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.WHITEKING.value
+        self.x = x
+        self.y = y
+ 
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
 
         # Define positions the king can move to
         positions = []
@@ -829,7 +919,19 @@ class Piece:
         return positions
     
 
-    def blackPawnCanMoveTo(x : int, y : int, game : Chess) -> list:
+
+class BlackPawn(Piece):
+    """
+    Black Pawn
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.BLACKPAWN.value
+        self.x = x
+        self.y = y
+ 
+
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
 
         # Define positions the pawn can move to
         positions = []
@@ -869,7 +971,19 @@ class Piece:
 
         return positions
     
-    def blackKnightCanMoveTo(x : int, y : int, game : Chess) -> list:
+
+
+class BlackKnight(Piece):
+    """
+    Black Knight
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.BLACKKNIGHT.value
+        self.x = x
+        self.y = y
+ 
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
 
         # Define positions the knight can move to
         positions = []
@@ -896,7 +1010,19 @@ class Piece:
 
         return positions
     
-    def blackBishopCanMoveTo(x : int, y : int, game : Chess) -> list:
+
+
+class BlackBishop(Piece):
+    """
+    Black Bishop
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.BLACKBISHOP.value
+        self.x = x
+        self.y = y
+ 
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
 
         # Define the movement options for the bishop
         positions = []
@@ -1010,8 +1136,20 @@ class Piece:
                 break
 
         return positions
-    
-    def blackRookCanMoveTo(x : int, y : int, game : Chess) -> list:
+
+
+
+class BlackRook(Piece):
+    """
+    Black Rook
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.BLACKROOK.value
+        self.x = x
+        self.y = y
+ 
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
 
         # Define the positions the rook can move to
         positions = []
@@ -1114,7 +1252,19 @@ class Piece:
 
         return positions
     
-    def blackQueenCanMoveTo(x : int, y : int, game : Chess) -> list:
+
+
+class BlackQueen(Piece):
+    """
+    Black Queen
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.BLACKQUEEN.value
+        self.x = x
+        self.y = y
+ 
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
 
         # Define all of the positions the queen can move to
         positions = []
@@ -1330,7 +1480,19 @@ class Piece:
 
         return positions
     
-    def blackKingCanMoveTo(x : int, y : int, game : Chess) -> list:
+
+
+class BlackKing(Piece):
+    """
+    Black King
+    """
+    def __init__(self, x, y) -> None:
+
+        self.type = PieceType.BLACKKING.value
+        self.x = x
+        self.y = y
+ 
+    def canMoveTo(x : int, y : int, game : Chess) -> list:
 
         # Define the positions teh king can move to
         positions = []
