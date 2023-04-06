@@ -14,6 +14,7 @@ class Chess:
         - board: 2d array with 0's as empty space and piece values according to PieceType enum
         - whiteTurn: True if the turn is white, false if the turn is black
         """
+        # stores the game board
         self.board = Chess.initializeGame()
 
         # Keeps track of turns
@@ -226,7 +227,7 @@ class Chess:
         
     def checkCheck(self):
         """
-        Determines whether check is given
+        Determines whether check is given, called after every move
         """
 
         # Black turn, check white for check
