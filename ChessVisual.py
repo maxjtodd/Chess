@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-import Pieces
+from PieceType import PieceType
 from Chess import *
 
 class ChessVisual:
