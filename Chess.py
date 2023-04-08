@@ -106,8 +106,6 @@ class Chess:
         # Place black king
         self.blackPieces.append(BlackKing(4, 0))
 
-        for p in self.blackPieces:
-            p.printPiece()
 
 
     def movePiece(self, oldX : int, oldY : int, move : tuple) -> None:
@@ -128,6 +126,9 @@ class Chess:
         newY = move[1]
         capture = move[2]
 
+        # todo Remove piece from list on capture
+        # Turn indicates the piece that was just moved, hasn't changed yet.
+        
         # Check for en passant captures
         enPassant = False
 
@@ -144,6 +145,22 @@ class Chess:
             # En passant occured
             self.board[oldY][newX] = 0
             enPassant = True
+
+        # A piece has been captured, remove it from the list of pieces
+        elif capture:
+            
+            # Get the piece being capture
+            pieceToCapture = self.board[newY][newX]
+
+            # Remove the piece being captured from the list
+
+            for i, p in enumerate(toSearch):
+                if p.x == newX and p.y == newY and p.type == pieceToCapture:
+                    if self.whiteTurn:
+                        del self.blackPieces[i]
+                    else:
+                        del self.whitePieces[i]
+
 
         # Move piece
         self.board[newY][newX] = piece
@@ -181,18 +198,11 @@ class Chess:
         # Get the piece
         piece = self.board[y][x]
 
-        # if piece != 0:
-        #     print("Piece is: ", PieceType(piece))
-        #     self.printBoard()
-
-
-
         # Set up the movement availability
         # Formatted as touple. (x to move to, y to move to, boolean true if piece capture)
         positions = []
 
         #
-        # TODO En Passant
         # TODO Pawn promotions
         # TODO Castling
         # TODO Check : seperate function, checks squares around the king to determine if attacked
@@ -209,37 +219,37 @@ class Chess:
             # White pawn movement positions
             if piece ==  PieceType.WHITEPAWN.value:
 
-                return Piece.whitePawnCanMoveTo(x, y, self)
+                return WhitePawn.canMoveTo(x, y, self)
 
 
             # White Knight movement positions
             elif piece ==  PieceType.WHITEKNIGHT.value:
 
-                return Piece.whiteKnightCanMoveTo(x, y, self)
+                return WhiteKnight.canMoveTo(x, y, self)
 
 
             # White Bishop movement positions
             elif piece == PieceType.WHITEBISHOP.value:
 
-                return Piece.whiteBishopCanMoveTo(x, y, self)
+                return WhiteBishop.canMoveTo(x, y, self)
 
 
             # White Rook movement positions
             elif piece == PieceType.WHITEROOK.value:
 
-                return Piece.whiteRookCanMoveTo(x, y, self)
+                return WhiteRook.canMoveTo(x, y, self)
 
 
             # Whtie Queen movement positions
             elif piece == PieceType.WHITEQUEEN.value:
 
-                return Piece.whiteQueenCanMoveTo(x, y, self)
+                return WhiteQueen.canMoveTo(x, y, self)
 
 
             # White King movement positions
             elif piece == PieceType.WHITEKING.value:
 
-                return Piece.whiteKingCanMoveTo(x, y, self)
+                return WhiteKing.canMoveTo(x, y, self)
 
 
         # Black turn, only black can move
@@ -248,37 +258,37 @@ class Chess:
             # Black pawn movement positions
             if piece ==  PieceType.BLACKPAWN.value:
 
-                return Piece.blackPawnCanMoveTo(x, y, self)
+                return BlackPawn.canMoveTo(x, y, self)
 
 
             # Black Knight movement positions
             elif piece ==  PieceType.BLACKKNIGHT.value:
 
-                return Piece.blackKnightCanMoveTo(x, y, self)
+                return BlackKnight.canMoveTo(x, y, self)
 
 
             # Black Bishop movement positions
             elif piece == PieceType.BLACKBISHOP.value:
 
-                return Piece.blackBishopCanMoveTo(x, y, self)
+                return BlackBishop.canMoveTo(x, y, self)
 
 
             # Black Rook movement positions
             elif piece == PieceType.BLACKROOK.value:
 
-                return Piece.blackRookCanMoveTo(x, y, self)
+                return BlackRook.canMoveTo(x, y, self)
 
 
             # Black Queen movement positions
             elif piece == PieceType.BLACKQUEEN.value:
 
-                return Piece.blackQueenCanMoveTo(x, y, self)
+                return BlackQueen.canMoveTo(x, y, self)
 
 
             # Black King movement positions
             elif piece == PieceType.BLACKKING.value:
 
-                return Piece.blackKingCanMoveTo(x, y, self)
+                return BlackKing.canMoveTo(x, y, self)
 
 
 
