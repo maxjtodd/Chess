@@ -152,14 +152,23 @@ class Chess:
             # Get the piece being capture
             pieceToCapture = self.board[newY][newX]
 
-            # Remove the piece being captured from the list
+            # Remove the black piece being captured from the list
+            if self.whiteTurn:
 
-            for i, p in enumerate(toSearch):
-                if p.x == newX and p.y == newY and p.type == pieceToCapture:
-                    if self.whiteTurn:
+                for i, p in enumerate(self.blackPieces):
+                    if p.x == newX and p.y == newY and p.type == pieceToCapture:
                         del self.blackPieces[i]
-                    else:
+
+            # Remove teh white piece being captured from the list
+            else:
+
+                for i, p in enumerate(self.whitePieces):
+                    if p.x == newX and p.y == newY and p.type == pieceToCapture:
                         del self.whitePieces[i]
+
+        print('white\t', len(self.whitePieces))
+        print('black\t', len(self.blackPieces))
+
 
 
         # Move piece
