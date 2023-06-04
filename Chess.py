@@ -18,6 +18,9 @@ class Chess:
         self.whitePieces = []
         self.blackPieces = []
 
+        # Stores piece value difference. + for white winning, - for black winning
+        self.value = 0
+
         # stores the game board
         self.board = Chess.initializeGame()
 
@@ -119,6 +122,22 @@ class Chess:
 
         # Get piece information
         piece = self.board[oldY][oldX]
+
+        pieceClass = Piece();
+
+        # Get the piece class piece
+        if self.whiteTurn:
+            for i, p in enumerate(self.whitePieces):
+                if p.x == oldX and p.y == oldY:
+                    pieceClass = p
+
+        # Remove the white piece being captured from the list
+        else:
+            for i, p in enumerate(self.blackPieces):
+                if p.x == oldX and p.y == oldY:
+                    pieceClass = p
+
+        # Set the old piece position to empty
         self.board[oldY][oldX] = 0
 
         # Get new movement piece information
@@ -126,7 +145,6 @@ class Chess:
         newY = move[1]
         capture = move[2]
 
-        # todo Remove piece from list on capture
         # Turn indicates the piece that was just moved, hasn't changed yet.
         
         # Check for en passant captures
@@ -152,28 +170,27 @@ class Chess:
             # Get the piece being capture
             pieceToCapture = self.board[newY][newX]
 
-            # Remove the black piece being captured from the list
+            # Remove the black piece being captured from the list 
             if self.whiteTurn:
 
                 for i, p in enumerate(self.blackPieces):
                     if p.x == newX and p.y == newY and p.type == pieceToCapture:
                         del self.blackPieces[i]
 
-            # Remove teh white piece being captured from the list
+            # Remove the white piece being captured from the list
             else:
 
                 for i, p in enumerate(self.whitePieces):
                     if p.x == newX and p.y == newY and p.type == pieceToCapture:
                         del self.whitePieces[i]
 
-        print('white\t', len(self.whitePieces))
-        print('black\t', len(self.blackPieces))
-
+            # update piece values
+            self.value = self.value + piece
 
 
         # Move piece
         self.board[newY][newX] = piece
-
+        pieceClass.movePiece(newX, newY)
 
         # TODO Check for check
         check = False
@@ -181,6 +198,7 @@ class Chess:
         # TODO Check for promotion
         promotion = False
 
+        print(self.value)
 
         # Check for white en passant values
         if piece == PieceType.WHITEPAWN.value and (oldY - newY) == 2:
@@ -386,8 +404,16 @@ class Piece:
         """
         raise NotImplementedError
 
+    def movePiece(self, x : int, y : int) -> None:
+
+        self.x = x
+        self.y = y
+
     def printPiece(self):
         print('type', self.type, ', (', self.x, ', ', self.y, ')')
+
+    def __str__(self):
+        return 'Piece: ' + str(self.type) + '(' + str(self.x) + ', ' + str(self.y) + ')'
 
 class WhitePawn(Piece):
     """

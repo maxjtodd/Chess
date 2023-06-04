@@ -232,7 +232,6 @@ class ChessVisual:
     
         # Get relative position of grid
         z = self.window.grid_location(x, y)
-
         # print(z)
         justMoved = False
 
