@@ -170,22 +170,22 @@ class Chess:
             # Get the piece being capture
             pieceToCapture = self.board[newY][newX]
 
-            # Remove the black piece being captured from the list 
+            # Remove the black piece being captured from the list and update overall value
             if self.whiteTurn:
 
                 for i, p in enumerate(self.blackPieces):
                     if p.x == newX and p.y == newY and p.type == pieceToCapture:
+                        self.value = self.value - self.blackPieces[i].value
                         del self.blackPieces[i]
 
-            # Remove the white piece being captured from the list
+            # Remove the white piece being captured from the list and update overall value
             else:
 
                 for i, p in enumerate(self.whitePieces):
                     if p.x == newX and p.y == newY and p.type == pieceToCapture:
+                        self.value = self.value + self.blackPieces[i].value
                         del self.whitePieces[i]
 
-            # update piece values
-            self.value = self.value + piece
 
 
         # Move piece
@@ -395,6 +395,7 @@ class Piece:
     def __init__(self) -> None:
         
         self.type = 0
+        self.value = 0
         self.x = -1
         self.y = -1
 
@@ -422,6 +423,7 @@ class WhitePawn(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.WHITEPAWN.value
+        self.value = 1
         self.x = x
         self.y = y
         
@@ -477,6 +479,7 @@ class WhiteKnight(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.WHITEKNIGHT.value
+        self.value = 3
         self.x = x
         self.y = y
  
@@ -516,6 +519,7 @@ class WhiteBishop(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.WHITEBISHOP.value
+        self.value = 3
         self.x = x
         self.y = y
  
@@ -645,6 +649,7 @@ class WhiteRook(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.WHITEROOK.value
+        self.value = 5
         self.x = x
         self.y = y
  
@@ -761,6 +766,7 @@ class WhiteQueen(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.WHITEQUEEN.value
+        self.value = 9
         self.x = x
         self.y = y
  
@@ -989,6 +995,7 @@ class WhiteKing(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.WHITEKING.value
+        self.value = 1000
         self.x = x
         self.y = y
  
@@ -1032,6 +1039,7 @@ class BlackPawn(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.BLACKPAWN.value
+        self.value = -1
         self.x = x
         self.y = y
  
@@ -1085,6 +1093,7 @@ class BlackKnight(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.BLACKKNIGHT.value
+        self.value = -3
         self.x = x
         self.y = y
  
@@ -1124,6 +1133,7 @@ class BlackBishop(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.BLACKBISHOP.value
+        self.value = -3
         self.x = x
         self.y = y
  
@@ -1251,6 +1261,7 @@ class BlackRook(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.BLACKROOK.value
+        self.value = -5
         self.x = x
         self.y = y
  
@@ -1366,6 +1377,7 @@ class BlackQueen(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.BLACKQUEEN.value
+        self.value = -9
         self.x = x
         self.y = y
  
@@ -1594,6 +1606,7 @@ class BlackKing(Piece):
     def __init__(self, x, y) -> None:
 
         self.type = PieceType.BLACKKING.value
+        self.value = -1000
         self.x = x
         self.y = y
  
