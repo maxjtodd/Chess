@@ -145,22 +145,16 @@ class ChessVisual:
         Move the piece from one position to another
         """
 
-        # En Passant or Promotion occured, special operations in order
-        if moveInfo[1] or moveInfo[2]:
-            
-            # TODO Promotion occured
+        # En Passant occured, special operations in order
+        if moveInfo[2]:
 
-            # En passant occured
-            if moveInfo[2]:
-                
-                # Remove pawn captured
-                pawnToRemove = self.window.grid_slaves(row=oldY, column=newX)[0]
-                pawnToRemove.grid_remove()
+            # Remove pawn captured
+            pawnToRemove = self.window.grid_slaves(row=oldY, column=newX)[0]
+            pawnToRemove.grid_remove()
 
-                # Place pawn capturing on grid
-                pieceToMove = self.window.grid_slaves(row=oldY, column=oldX)[0]
-                pieceToMove.grid(row=newY, column=newX)
-
+            # Place pawn capturing on grid
+            pieceToMove = self.window.grid_slaves(row=oldY, column=oldX)[0]
+            pieceToMove.grid(row=newY, column=newX)
 
 
         else:
@@ -190,6 +184,17 @@ class ChessVisual:
             # Set the position of the new piece
             pieceToMove.grid(row=newY, column=newX)
 
+
+        # Promotion occured
+        if moveInfo[1]:
+
+            print('PROMO FROM VIS')
+            # Update the pawn sprite for a queen sprite
+
+            # Remove pawn 
+            pawnToRemove = self.window.grid_slaves(row=newY, column=newX)[0]
+            self.setPiece(PieceType.WHITEQUEEN.value, newX, newY)
+            print(pawnToRemove)
 
         # TODO Remove
         self.game.printBoard()
@@ -232,7 +237,7 @@ class ChessVisual:
     
         # Get relative position of grid
         z = self.window.grid_location(x, y)
-        # print(z)
+        #print(z)
         justMoved = False
 
         # Determine if clicked piece is in the potential moves for selected piece

@@ -120,22 +120,27 @@ class Chess:
         - move: tuple from function canMoveTo containing information about move
         """
 
+        # TODO for move piece, if pawn is second to back rank or if new reaches the end
+
         # Get piece information
         piece = self.board[oldY][oldX]
 
         pieceClass = Piece();
+        pieceClassIndex = -1
 
         # Get the piece class piece
         if self.whiteTurn:
             for i, p in enumerate(self.whitePieces):
                 if p.x == oldX and p.y == oldY:
                     pieceClass = p
+                    pieceClassIndex = i
 
         # Remove the white piece being captured from the list
         else:
             for i, p in enumerate(self.blackPieces):
                 if p.x == oldX and p.y == oldY:
                     pieceClass = p
+                    pieceClassIndex = i
 
         # Set the old piece position to empty
         self.board[oldY][oldX] = 0
@@ -192,11 +197,19 @@ class Chess:
         self.board[newY][newX] = piece
         pieceClass.movePiece(newX, newY)
 
+        # Check for promotion, promote to queen if found
+        promotion = False
+        if piece == PieceType.WHITEPAWN.value and newY == 0:
+            self.board[newY][newX] = PieceType.WHITEQUEEN.value
+            self.whitePieces[pieceClassIndex] = WhiteQueen(x=newX, y=newY)
+            promotion = True
+        if piece == PieceType.BLACKPAWN.value and newY == 7:
+            self.board[newY][newX] = piece
+            self.blackPieces[pieceClassIndex] = BlackQueen(x=newX, y=newY)
+            promotion = True
+
         # TODO Check for check
         check = False
-
-        # TODO Check for promotion
-        promotion = False
 
         print(self.value)
 
@@ -212,6 +225,7 @@ class Chess:
 
         # Set other player turn
         self.whiteTurn = not self.whiteTurn
+        print('PROMO FROM CHESS' , promotion)
 
         # Return move information in form of (check, promotion, enPassant)
         return (check, promotion, enPassant)
@@ -431,7 +445,6 @@ class WhitePawn(Piece):
         """
         Defines all of the squares that
         """
-        # TODO promotions
 
         # Set up positions that pawn can move to
         positions = []
@@ -1048,8 +1061,6 @@ class BlackPawn(Piece):
 
         # Define positions the pawn can move to
         positions = []
-
-        # TODO promotions
 
         # Pawns can move forward once at any time if nothing blocking it's path
         if game.board[y + 1][x] == 0:
